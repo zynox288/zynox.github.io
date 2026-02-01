@@ -1,98 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIT-SS | Command & Verify</title>
+    <title>BIT-SS Dashboard</title>
     <style>
-        :root { --fox: #ff8c00; --bg: #0b0b14; --card: rgba(255, 255, 255, 0.05); }
-        body { margin: 0; background: var(--bg); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
-        
-        nav { padding: 20px 10%; background: rgba(0,0,0,0.5); display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,140,0,0.2); }
-        .logo { color: var(--fox); font-weight: bold; font-size: 1.4rem; letter-spacing: 2px; }
-
-        .container { padding: 40px 10%; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-
-        /* Dashboard & Terminal */
-        .card { background: var(--card); border-radius: 15px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); }
-        .terminal { background: #05050a; height: 300px; overflow-y: hidden; padding: 15px; font-family: 'Courier New', monospace; font-size: 0.8rem; border: 1px solid #1a1a2e; margin-top: 15px; }
-        .log-entry { margin-bottom: 8px; border-left: 3px solid var(--fox); padding-left: 10px; animation: fadeIn 0.4s; }
-
-        /* PIN Verification UI */
-        .verify-box { display: flex; flex-direction: column; gap: 15px; }
-        input { background: #1a1a2e; border: 1px solid var(--fox); padding: 12px; color: white; border-radius: 5px; font-size: 1rem; outline: none; }
-        .btn-verify { background: var(--fox); border: none; padding: 12px; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        .btn-verify:hover { background: #e67e00; transform: scale(1.02); }
-        
-        #verify-result { margin-top: 10px; font-weight: bold; text-align: center; font-size: 0.9rem; }
-        .success { color: #00ff7f; }
-        .error { color: #ff4d4d; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+        body { background: #0f0f1a; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        .card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px; border: 1px solid #ff8c00; display: inline-block; min-width: 400px; }
+        .btn-discord { background: #5865F2; color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        .pin-display { font-size: 3rem; color: #ff8c00; margin: 20px 0; letter-spacing: 10px; font-family: monospace; }
+        .log { background: black; text-align: left; padding: 10px; height: 150px; overflow-y: scroll; margin-top: 20px; font-size: 0.8rem; color: #00ff7f; border: 1px solid #333; }
     </style>
 </head>
 <body>
 
-    <nav><div class="logo">BIT-SS</div></nav>
+    <div class="card" id="login-view">
+        <h2>STAFF AUTHORIZATION</h2>
+        <p>Login with Discord to access the SS Control Panel</p>
+        <br>
+        <a href="#" class="btn-discord" onclick="showDash()">LOGIN WITH DISCORD</a>
+    </div>
 
-    <div class="container">
-        <div class="card">
-            <h3>Staff PIN Verification</h3>
-            <p style="font-size: 0.85rem; opacity: 0.7;">Enter the 6-digit PIN from the Discord alert to verify the player's session.</p>
-            <div class="verify-box">
-                <input type="text" id="pin-input" placeholder="Enter PIN (e.g. 123456)" maxlength="6">
-                <button class="btn-verify" onclick="verifyPin()">VERIFY SESSION</button>
-                <div id="verify-result"></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>Live Intelligence Feed</h3>
-            <div class="terminal" id="terminal"></div>
+    <div class="card" id="dash-view" style="display:none;">
+        <h2>COMMAND CENTER</h2>
+        <p>Generate a PIN for the user's tool:</p>
+        <div class="pin-display" id="pin">------</div>
+        <button onclick="genPin()" style="padding:10px 20px; cursor:pointer;">GENERATE NEW PIN</button>
+        
+        <div class="log" id="log">
+            [SYSTEM] Waiting for scan...
         </div>
     </div>
 
     <script>
-        const terminal = document.getElementById('terminal');
-        const res = document.getElementById('verify-result');
-        
-        // Simulation data
-        const players = ["Zynox_PvP", "Staff_Alex", "Ghost_Hunter", "Sneaky_Fox"];
-        const scans = ["Heap Analysis", "String Search", "Registry Check", "Module Scan"];
-
-        function addLog() {
-            const time = new Date().toLocaleTimeString();
-            const player = players[Math.floor(Math.random() * players.length)];
-            const scan = scans[Math.floor(Math.random() * scans.length)];
-            const pin = Math.floor(100000 + Math.random() * 900000);
-
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            entry.innerHTML = `<span style="color:var(--fox)">[${time}]</span> <strong>${player}</strong>: ${scan}... <span style="color:#666;">(ID: ${pin})</span>`;
-            
-            terminal.prepend(entry);
-            if (terminal.children.length > 12) terminal.lastChild.remove();
+        function showDash() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('dash-view').style.display = 'block';
         }
 
-        function verifyPin() {
-            const input = document.getElementById('pin-input').value;
-            if (input.length === 6 && !isNaN(input)) {
-                res.innerHTML = `<span class="success">✓ SESSION ${input} AUTHORIZED</span>`;
-                // Log the manual verification to the terminal
-                const logEntry = document.createElement('div');
-                logEntry.className = 'log-entry';
-                logEntry.style.borderLeftColor = "#00ff7f";
-                logEntry.innerHTML = `<span style="color:#00ff7f">[VERIFIED]</span> Manual Authorization for PIN: ${input}`;
-                terminal.prepend(logEntry);
-            } else {
-                res.innerHTML = `<span class="error">✗ INVALID PIN FORMAT</span>`;
-            }
-            setTimeout(() => { res.innerHTML = ""; }, 3000);
+        function genPin() {
+            const newPin = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('pin').innerText = newPin;
+            const log = document.getElementById('log');
+            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Generated PIN: ${newPin}</div>`;
         }
-
-        setInterval(addLog, 5000);
-        addLog();
     </script>
 </body>
 </html>
