@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIT-SS | Professional Scanner</title>
+    <title>BIT-SS | Authorized Access</title>
     <style>
         :root {
             --fox-orange: #ff8c00;
@@ -23,16 +23,16 @@
             min-height: 100vh;
         }
 
+        /* Fox Glow Background */
         .aura {
             position: fixed;
             top: 50%;
             left: 50%;
             width: 100vw;
             height: 100vw;
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.05) 0%, rgba(11, 11, 20, 0) 70%);
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.04) 0%, rgba(11, 11, 20, 0) 70%);
             transform: translate(-50%, -50%);
             z-index: -1;
-            pointer-events: none;
         }
 
         nav {
@@ -47,48 +47,34 @@
 
         .logo { font-size: 1.5rem; font-weight: bold; color: var(--fox-orange); letter-spacing: 2px; }
 
-        header { text-align: center; padding: 80px 10%; flex-grow: 1; }
+        header { text-align: center; padding: 100px 10%; flex-grow: 1; }
 
         h1 { font-size: 3rem; margin: 10px 0; }
-        p.subtitle { font-size: 1.1rem; opacity: 0.6; margin-bottom: 40px; }
+        .subtitle { font-size: 1.1rem; opacity: 0.6; margin-bottom: 40px; }
 
-        .btn-main {
-            background: var(--fox-orange);
-            color: white;
+        /* Login & Download Buttons */
+        .btn {
             padding: 18px 45px;
             border-radius: 12px;
             text-decoration: none;
             font-weight: bold;
             display: inline-block;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+            cursor: pointer;
+            border: none;
             font-size: 1.1rem;
         }
 
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(255, 140, 0, 0.5); }
+        .btn-discord { background: #5865F2; color: white; }
+        .btn-download { background: var(--fox-orange); color: white; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3); }
 
-        .counter-badge {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            opacity: 0.7;
-            display: block;
-        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 40px 10%;
-        }
+        .user-info { margin-top: 20px; font-size: 0.9rem; color: #5865F2; font-weight: bold; }
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px;
-            border-radius: 15px;
-        }
+        .hidden { display: none; }
 
-        footer { text-align: center; padding: 30px; opacity: 0.4; font-size: 0.8rem; }
+        footer { text-align: center; padding: 40px; opacity: 0.3; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -99,46 +85,66 @@
         <div class="logo">BIT-SS</div>
     </nav>
 
-    <header>
-        <h1>Secure. Stealthy. <span style="color:var(--fox-orange)">Fast.</span></h1>
-        <p class="subtitle">Advanced Screen-Share utility for modern Minecraft servers.</p>
-        
-        <a href="https://github.com/zynox288/zynox.github.io/releases/" class="btn-main">
-            DOWNLOAD BIT-SS
-        </a>
-        
-        <div class="counter-badge">
-            <span id="dl-count">Fetching statistics...</span>
-        </div>
+    <header id="auth-gate">
+        <h1>Access <span style="color:var(--fox-orange)">Locked.</span></h1>
+        <p class="subtitle">Authorization required to download the Bit-SS security tool.</p>
+        <button onclick="loginWithDiscord()" class="btn btn-discord">LOGIN WITH DISCORD</button>
     </header>
 
-    <section class="features">
-        <div class="card">
-            <h3>Stealth Styles</h3>
-            <p>Built with <code>WS_EX_TOOLWINDOW</code> to remain hidden from the taskbar and Alt-Tab menu.</p>
-        </div>
-        <div class="card">
-            <h3>Automated Logging</h3>
-            <p>Every detection is securely logged and sent via Discord Webhook for staff review.</p>
-        </div>
-    </section>
+    <header id="download-zone" class="hidden">
+        <h1>Welcome, <span id="user-display" style="color:var(--fox-orange)">Hunter</span></h1>
+        <p class="subtitle">You are authorized. Download the latest version below.</p>
+        <a href="https://github.com/zynox288/zynox.github.io/releases/" class="btn btn-download">
+            DOWNLOAD BIT-SS (.EXE)
+        </a>
+        <div class="user-info">Logged in as <span id="user-tag"></span></div>
+    </header>
 
     <footer>
-        &copy; 2026 zynox288 - Bit-SS Project
+        &copy; 2026 zynox288 Security | bit-ss scanner project
     </footer>
 
     <script>
-        async function updateStats() {
-            try {
-                const res = await fetch('https://api.github.com/repos/zynox288/zynox.github.io/releases/');
-                const data = await res.json();
-                const count = data.assets[0].download_count;
-                document.getElementById('dl-count').innerText = `${count} successful downloads`;
-            } catch (e) {
-                document.getElementById('dl-count').innerText = "V1.0.0 Stable";
+        // --- CONFIGURATION ---
+        const CLIENT_ID = '1467496595502403614'; // Get this from Discord Developer Portal
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+        function loginWithDiscord() {
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            window.location.href = url;
+        }
+
+        async function checkAuth() {
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const token = fragment.get('access_token');
+
+            if (token) {
+                try {
+                    const response = await fetch('https://discord.com/api/users/@me', {
+                        headers: { authorization: `Bearer ${token}` }
+                    });
+                    const user = await response.json();
+
+                    if (user.username) {
+                        // Switch UI
+                        document.getElementById('auth-gate').classList.add('hidden');
+                        document.getElementById('download-zone').classList.remove('hidden');
+                        
+                        // Show User Info
+                        document.getElementById('user-display').innerText = user.username;
+                        document.getElementById('user-tag').innerText = `${user.username}#${user.discriminator || '0'}`;
+                        
+                        // Clean the URL (remove the token for safety)
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                } catch (err) {
+                    console.error("Auth failed", err);
+                }
             }
         }
-        updateStats();
+
+        // Run on page load
+        checkAuth();
     </script>
 </body>
 </html>
