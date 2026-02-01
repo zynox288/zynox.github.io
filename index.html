@@ -130,7 +130,7 @@
     <script>
         async function updateStats() {
             try {
-                const res = await fetch('https://api.github.com/repos/zynox288/zynox.github.io/releases/latest');
+                const res = await fetch('https://api.github.com/repos/zynox288/zynox.github.io/releases/');
                 const data = await res.json();
                 const count = data.assets[0].download_count;
                 document.getElementById('dl-count').innerText = `${count} successful downloads`;
