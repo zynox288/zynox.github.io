@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIT.APP | Stealth Scanner</title>
+    <title>BIT-SS | Professional Scanner</title>
     <style>
         :root {
             --fox-orange: #ff8c00;
@@ -16,24 +16,25 @@
             margin: 0;
             background-color: var(--dark-bg);
             color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Animated Background Aura */
         .aura {
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 80vw;
-            height: 80vw;
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.08) 0%, rgba(11, 11, 20, 0) 70%);
+            width: 100vw;
+            height: 100vw;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.05) 0%, rgba(11, 11, 20, 0) 70%);
             transform: translate(-50%, -50%);
             z-index: -1;
             pointer-events: none;
         }
 
-        /* Navigation */
         nav {
             display: flex;
             justify-content: space-between;
@@ -41,101 +42,53 @@
             padding: 20px 10%;
             background: rgba(11, 11, 20, 0.8);
             backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--fox-orange);
-            letter-spacing: 2px;
-        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--fox-orange); letter-spacing: 2px; }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 30px;
-            font-size: 0.9rem;
-            transition: 0.3s;
-            opacity: 0.7;
-        }
+        header { text-align: center; padding: 80px 10%; flex-grow: 1; }
 
-        .nav-links a:hover { opacity: 1; color: var(--fox-orange); }
-
-        /* Hero Section */
-        header {
-            text-align: center;
-            padding: 100px 10%;
-        }
-
-        .hero-badge {
-            background: rgba(255, 140, 0, 0.1);
-            color: var(--fox-orange);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid var(--fox-orange);
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        h1 { font-size: 3.5rem; margin: 10px 0; }
-        p.subtitle { font-size: 1.2rem; opacity: 0.6; max-width: 600px; margin: 0 auto 30px; }
+        h1 { font-size: 3rem; margin: 10px 0; }
+        p.subtitle { font-size: 1.1rem; opacity: 0.6; margin-bottom: 40px; }
 
         .btn-main {
             background: var(--fox-orange);
             color: white;
-            padding: 15px 40px;
-            border-radius: 8px;
+            padding: 18px 45px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: bold;
             display: inline-block;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+            font-size: 1.1rem;
         }
 
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255, 140, 0, 0.5); }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(255, 140, 0, 0.5); }
 
-        /* Features Grid */
+        .counter-badge {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            display: block;
+        }
+
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            padding: 50px 10%;
+            padding: 40px 10%;
         }
 
         .card {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
-            transition: 0.3s;
         }
 
-        .card:hover { border-color: var(--fox-orange); background: rgba(255, 255, 255, 0.08); }
-
-        .card h3 { color: var(--fox-orange); margin-top: 0; }
-        .card p { font-size: 0.9rem; line-height: 1.6; opacity: 0.7; }
-
-        /* Status Section */
-        .status-bar {
-            background: rgba(0, 255, 127, 0.05);
-            border: 1px solid rgba(0, 255, 127, 0.2);
-            margin: 50px 10%;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-
-        .dot { height: 10px; width: 10px; background-color: #00ff7f; border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 2s infinite; }
-
-        @keyframes blink { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
-
-        footer { text-align: center; padding: 40px; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        footer { text-align: center; padding: 30px; opacity: 0.4; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -143,43 +96,49 @@
     <div class="aura"></div>
 
     <nav>
-        <div class="logo">BIT.APP</div>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#download">Download</a>
-            <a href="https://discord.gg/yourlink">Discord</a>
-        </div>
+        <div class="logo">BIT-SS</div>
     </nav>
 
     <header>
-        <div class="hero-badge">VERSION 2.0 RELEASED</div>
-        <h1>Hunting Cheats with <span style="color:var(--fox-orange)">Stealth.</span></h1>
-        <p class="subtitle">A lightweight C++ utility designed for high-performance PC scanning and screen-share verification.</p>
-        <a href="#" class="btn-main">GET BIT.APP</a>
+        <h1>Secure. Stealthy. <span style="color:var(--fox-orange)">Fast.</span></h1>
+        <p class="subtitle">Advanced Screen-Share utility for modern Minecraft servers.</p>
+        
+        <a href="https://github.com/zynox288/zynox.github.io/releases/latest/download/Bit-SS.exe" class="btn-main">
+            DOWNLOAD BIT-SS
+        </a>
+        
+        <div class="counter-badge">
+            <span id="dl-count">Fetching statistics...</span>
+        </div>
     </header>
 
-    <div class="status-bar">
-        <span class="dot"></span> Global Detection Engine: <strong>ONLINE</strong> — Last Signature Update: 2 hours ago
-    </div>
-
-    <section class="features" id="features">
+    <section class="features">
         <div class="card">
-            <h3>Stealth Engine</h3>
-            <p>Runs with <code>WS_EX_TOOLWINDOW</code>, ensuring no icon appears on the taskbar or ALT+TAB menu during sensitive scans.</p>
+            <h3>Stealth Styles</h3>
+            <p>Built with <code>WS_EX_TOOLWINDOW</code> to remain hidden from the taskbar and Alt-Tab menu.</p>
         </div>
         <div class="card">
-            <h3>Deep String Scan</h3>
-            <p>Analyzes internal JAR strings and class metadata to find renamed or hidden modules like killaura and reach.</p>
-        </div>
-        <div class="card">
-            <h3>Discord Reports</h3>
-            <p>Instant results sent via secure Webhooks (TLS 1.2) containing hardware IDs, timestamps, and detection logs.</p>
+            <h3>Automated Logging</h3>
+            <p>Every detection is securely logged and sent via Discord Webhook for staff review.</p>
         </div>
     </section>
 
     <footer>
-        &copy; 2026 BIT.APP Security Solutions. Not affiliated with Mojang AB.
+        &copy; 2026 zynox288 - Bit-SS Project
     </footer>
 
+    <script>
+        async function updateStats() {
+            try {
+                const res = await fetch('https://api.github.com/repos/zynox288/zynox.github.io/releases/latest');
+                const data = await res.json();
+                const count = data.assets[0].download_count;
+                document.getElementById('dl-count').innerText = `${count} successful downloads`;
+            } catch (e) {
+                document.getElementById('dl-count').innerText = "V1.0.0 Stable";
+            }
+        }
+        updateStats();
+    </script>
 </body>
 </html>
