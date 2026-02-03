@@ -1,1 +1,0 @@
-# zynox.github.io
